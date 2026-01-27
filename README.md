@@ -1,130 +1,78 @@
-# events-api
+# events-api API (Serverless)
 
-This project contains source code and supporting files for a serverless application that you can deploy with the SAM CLI. It includes the following files and folders.
+API REST Serverless de gestion d'événements, développée en **Python 3.9** sur AWS.
+Ce projet a été conçu avec une approche **"FinOps First"** pour respecter strictement le Free Tier AWS et les bonnes pratiques de sécurité.
 
-- hello_world - Code for the application's Lambda function.
-- events - Invocation events that you can use to invoke the function.
-- tests - Unit tests for the application code. 
-- template.yaml - A template that defines the application's AWS resources.
+## 📋 Architecture & Choix Techniques
 
-The application uses several AWS resources, including Lambda functions and an API Gateway API. These resources are defined in the `template.yaml` file in this project. You can update the template to add AWS resources through the same deployment process that updates your application code.
+* **Compute** : AWS Lambda (Python 3.9 sur architecture ARM64/Graviton2 pour performance/coût).
+* **API** : API Gateway (HTTP API).
+* [cite_start]**Base de données** : DynamoDB configurée en mode **Provisioned** (5 RCU/WCU) pour rester sous la limite gratuite des 25 unités[cite: 11, 81].
+* [cite_start]**Stockage** : S3 avec chiffrement **SSE-S3** (AES256) et **Block Public Access** activé[cite: 55, 57].
+* **IaC** : Template AWS SAM (`template.yaml`).
 
-If you prefer to use an integrated development environment (IDE) to build and test your application, you can use the AWS Toolkit.  
-The AWS Toolkit is an open source plug-in for popular IDEs that uses the SAM CLI to build and deploy serverless applications on AWS. The AWS Toolkit also adds a simplified step-through debugging experience for Lambda function code. See the following links to get started.
+## 🚀 Runbook : Installation & Déploiement
 
-* [CLion](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [GoLand](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [IntelliJ](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [WebStorm](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [Rider](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [PhpStorm](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [PyCharm](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [RubyMine](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [DataGrip](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [VS Code](https://docs.aws.amazon.com/toolkit-for-vscode/latest/userguide/welcome.html)
-* [Visual Studio](https://docs.aws.amazon.com/toolkit-for-visual-studio/latest/user-guide/welcome.html)
+### Prérequis
+* AWS CLI configuré (`aws configure`)
+* SAM CLI installé
+* Python 3.9+
 
-## Deploy the sample application
-
-The Serverless Application Model Command Line Interface (SAM CLI) is an extension of the AWS CLI that adds functionality for building and testing Lambda applications. It uses Docker to run your functions in an Amazon Linux environment that matches Lambda. It can also emulate your application's build environment and API.
-
-To use the SAM CLI, you need the following tools.
-
-* SAM CLI - [Install the SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html)
-* [Python 3 installed](https://www.python.org/downloads/)
-* Docker - [Install Docker community edition](https://hub.docker.com/search/?type=edition&offering=community)
-
-To build and deploy your application for the first time, run the following in your shell:
-
+### 1. Build & Déploiement
 ```bash
-sam build --use-container
+# Compiler le projet
+sam build
+
+# Déployer (guidé la première fois)
 sam deploy --guided
 ```
 
-The first command will build the source of your application. The second command will package and deploy your application to AWS, with a series of prompts:
+### 2. Utiliser l'API
 
-* **Stack Name**: The name of the stack to deploy to CloudFormation. This should be unique to your account and region, and a good starting point would be something matching your project name.
-* **AWS Region**: The AWS region you want to deploy your app to.
-* **Confirm changes before deploy**: If set to yes, any change sets will be shown to you before execution for manual review. If set to no, the AWS SAM CLI will automatically deploy application changes.
-* **Allow SAM CLI IAM role creation**: Many AWS SAM templates, including this example, create AWS IAM roles required for the AWS Lambda function(s) included to access AWS services. By default, these are scoped down to minimum required permissions. To deploy an AWS CloudFormation stack which creates or modifies IAM roles, the `CAPABILITY_IAM` value for `capabilities` must be provided. If permission isn't provided through this prompt, to deploy this example you must explicitly pass `--capabilities CAPABILITY_IAM` to the `sam deploy` command.
-* **Save arguments to samconfig.toml**: If set to yes, your choices will be saved to a configuration file inside the project, so that in the future you can just re-run `sam deploy` without parameters to deploy changes to your application.
+#### Obtenir tous les évènements :
+https://6u6er7turb.execute-api.eu-north-1.amazonaws.com/events
 
-You can find your API Gateway Endpoint URL in the output values displayed after deployment.
+<img width="748" height="645" alt="Capture d&#39;écran 2026-01-27 154900" src="https://github.com/user-attachments/assets/3e472d25-fc63-4a7c-8617-e7cbf5f15e4c" />
 
-## Use the SAM CLI to build and test locally
+#### Obtenir un évènement
+https://6u6er7turb.execute-api.eu-north-1.amazonaws.com/events/726acb77-1a49-4cb7-ac3e-c44012740055
 
-Build your application with the `sam build --use-container` command.
+<img width="817" height="495" alt="Capture d&#39;écran 2026-01-27 154924" src="https://github.com/user-attachments/assets/a9b84e79-7780-4e11-aac0-d9fba0f05562" />
 
+#### Creer un évènement
+https://6u6er7turb.execute-api.eu-north-1.amazonaws.com/events
+
+Exemple de corp de requête :
+```json
+{
+  "title": "Hackathon Serverless",
+  "date": "2026-03-15T09:00:00Z",
+  "description": "Initiation AWS Lambda",
+  "location": "Campus Numérique"
+}
+```
+
+<img width="599" height="524" alt="Capture d&#39;écran 2026-01-27 154918" src="https://github.com/user-attachments/assets/456623a2-25bd-480e-9516-1c1f35cb6a46" />
+
+#### Uploader une URL d'image
+https://6u6er7turb.execute-api.eu-north-1.amazonaws.com/events/726acb77-1a49-4cb7-ac3e-c44012740055/upload-url
+
+<img width="1461" height="514" alt="Capture d&#39;écran 2026-01-27 154931" src="https://github.com/user-attachments/assets/66149a54-4d01-44d7-88fe-7fd7a890b278" />
+
+### 3. Lancer les tests
 ```bash
-events-api$ sam build --use-container
+# Installer les dépendances de test
+pip install -r tests/requirements.txt
+
+# Lancer les tests
+export PYTHONPATH=$PYTHONPATH:.
+pytest tests/unit/test_handlers.py -v
 ```
 
-The SAM CLI installs dependencies defined in `hello_world/requirements.txt`, creates a deployment package, and saves it in the `.aws-sam/build` folder.
-
-Test a single function by invoking it directly with a test event. An event is a JSON document that represents the input that the function receives from the event source. Test events are included in the `events` folder in this project.
-
-Run functions locally and invoke them with the `sam local invoke` command.
-
+### 4. Nettoyage
 ```bash
-events-api$ sam local invoke HelloWorldFunction --event events/event.json
+sam delete
 ```
 
-The SAM CLI can also emulate your application's API. Use the `sam local start-api` to run the API locally on port 3000.
-
-```bash
-events-api$ sam local start-api
-events-api$ curl http://localhost:3000/
-```
-
-The SAM CLI reads the application template to determine the API's routes and the functions that they invoke. The `Events` property on each function's definition includes the route and method for each path.
-
-```yaml
-      Events:
-        HelloWorld:
-          Type: Api
-          Properties:
-            Path: /hello
-            Method: get
-```
-
-## Add a resource to your application
-The application template uses AWS Serverless Application Model (AWS SAM) to define application resources. AWS SAM is an extension of AWS CloudFormation with a simpler syntax for configuring common serverless application resources such as functions, triggers, and APIs. For resources not included in [the SAM specification](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md), you can use standard [AWS CloudFormation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html) resource types.
-
-## Fetch, tail, and filter Lambda function logs
-
-To simplify troubleshooting, SAM CLI has a command called `sam logs`. `sam logs` lets you fetch logs generated by your deployed Lambda function from the command line. In addition to printing the logs on the terminal, this command has several nifty features to help you quickly find the bug.
-
-`NOTE`: This command works for all AWS Lambda functions; not just the ones you deploy using SAM.
-
-```bash
-events-api$ sam logs -n HelloWorldFunction --stack-name "events-api" --tail
-```
-
-You can find more information and examples about filtering Lambda function logs in the [SAM CLI Documentation](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-logging.html).
-
-## Tests
-
-Tests are defined in the `tests` folder in this project. Use PIP to install the test dependencies and run tests.
-
-```bash
-events-api$ pip install -r tests/requirements.txt --user
-# unit test
-events-api$ python -m pytest tests/unit -v
-# integration test, requiring deploying the stack first.
-# Create the env variable AWS_SAM_STACK_NAME with the name of the stack we are testing
-events-api$ AWS_SAM_STACK_NAME="events-api" python -m pytest tests/integration -v
-```
-
-## Cleanup
-
-To delete the sample application that you created, use the AWS CLI. Assuming you used your project name for the stack name, you can run the following:
-
-```bash
-sam delete --stack-name "events-api"
-```
-
-## Resources
-
-See the [AWS SAM developer guide](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html) for an introduction to SAM specification, the SAM CLI, and serverless application concepts.
-
-Next, you can use AWS Serverless Application Repository to deploy ready to use Apps that go beyond hello world samples and learn how authors developed their applications: [AWS Serverless Application Repository main page](https://aws.amazon.com/serverless/serverlessrepo/)
+### 5. Exemple de logs via CloudWatch
+<img width="1686" height="681" alt="image" src="https://github.com/user-attachments/assets/f4af7b61-10d2-46d9-8c15-44a0d48ee4c1" />
