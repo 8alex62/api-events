@@ -18,22 +18,4 @@ manifest_hash = ""
 packagetype = "Zip"
 functions = ["GetEventsFunction"]
 
-[function_build_definitions.b2debf78-0833-4ffe-aa00-6dc3c87ca27e]
-codeuri = "/home/cloudshell-user/events-api/src/get_event_by_id"
-runtime = "python3.9"
-architecture = "arm64"
-handler = "app.handler"
-manifest_hash = ""
-packagetype = "Zip"
-functions = ["GetEventByIdFunction"]
-
-[function_build_definitions.2caa409a-28bb-4376-a057-c2280b4a5836]
-codeuri = "/home/cloudshell-user/events-api/src/get_upload_url"
-runtime = "python3.9"
-architecture = "arm64"
-handler = "app.handler"
-manifest_hash = ""
-packagetype = "Zip"
-functions = ["GetUploadUrlFunction"]
-
 [layer_build_definitions]
