@@ -1,6 +1,8 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Events REST API
+Description: >
+  Campus Events API - TP Serverless (Python 3.9)
+  Respecte les contraintes Free Tier : DynamoDB Provisioned, S3 Standard, Logs 7 jours.
 
 Globals:
   Function:
@@ -9,7 +11,7 @@ Globals:
     Timeout: 10
     MemorySize: 128
     LoggingConfig:
-      LogFormat: JSON
+      [cite_start]LogFormat: JSON
     Environment:
       Variables:
         TABLE_NAME: !Ref EventsTable
@@ -23,26 +25,6 @@ Resources:
         AllowOrigins: ['*']
         AllowMethods: [GET, POST, PUT, DELETE]
         AllowHeaders: ['content-type', 'authorization']
-GetUploadUrlFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: src/get_upload_url/
-      Handler: app.handler
-      Events:
-        GetUploadUrl:
-          Type: HttpApi
-          Properties:
-            ApiId: !Ref HttpApi
-            Path: /events/{id}/upload-url
-            Method: POST
-      Policies:
-        - S3WritePolicy:
-            BucketName: !Ref ImagesBucket
-        - DynamoDBWritePolicy:
-            TableName: !Ref EventsTable
-
-
-
   EventsTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -56,7 +38,6 @@ GetUploadUrlFunction:
       KeySchema:
         - AttributeName: eventId
           KeyType: HASH
-
   ImagesBucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -69,7 +50,6 @@ GetUploadUrlFunction:
         BlockPublicPolicy: true
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
-
   CreateEventFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -85,13 +65,11 @@ GetUploadUrlFunction:
       Policies:
         - DynamoDBWritePolicy:
             TableName: !Ref EventsTable
-
   CreateEventLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Sub "/aws/lambda/${CreateEventFunction}"
-      RetentionInDays: 7
-
+      [cite_start]RetentionInDays: 7 
   GetEventsFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -113,7 +91,7 @@ GetUploadUrlFunction:
     Properties:
       LogGroupName: !Sub "/aws/lambda/${GetEventsFunction}"
       RetentionInDays: 7
-
+      
   GetEventByIdFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -129,14 +107,40 @@ GetUploadUrlFunction:
       Policies:
         - DynamoDBReadPolicy:
             TableName: !Ref EventsTable
-
   GetEventByIdLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Sub "/aws/lambda/${GetEventByIdFunction}"
+      RetentionInDays: 7
+      
+  GetUploadUrlFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/get_upload_url/
+      Handler: app.handler
+      Events:
+        GetUploadUrl:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /events/{id}/upload-url
+            Method: POST
+      Policies:
+        - S3WritePolicy:
+            BucketName: !Ref ImagesBucket
+        - DynamoDBWritePolicy:
+            TableName: !Ref EventsTable
+
+  GetUploadUrlLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${GetUploadUrlFunction}"
       RetentionInDays: 7
 
 Outputs:
   ApiUrl:
     Description: HTTP API endpoint
     Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com"
+  ImagesBucketName:
+    Description: S3 Bucket Name
+    Value: !Ref ImagesBucket
