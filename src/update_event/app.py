@@ -5,7 +5,6 @@ import logging
 from datetime import datetime
 from decimal import Decimal
 
-# Configuration des logs
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
@@ -21,27 +20,22 @@ class DecimalEncoder(json.JSONEncoder):
 
 def handler(event, context):
     try:
-        # 1. Vérification de l'ID
         event_id = event.get('pathParameters', {}).get('id')
         if not event_id:
             return {"statusCode": 400, "body": json.dumps({"error": "Missing event ID"})}
 
-        # 2. Parsing du Body
         body_str = event.get('body', '{}') or '{}'
         body = json.loads(body_str)
         
-        # Validation des champs obligatoires
         if not body.get('title') or not body.get('date'):
             return {"statusCode": 400, "body": json.dumps({"error": "Title and date are required"})}
 
-        # 3. Mise à jour DynamoDB avec ALIAS pour 'date' et 'location'
         response = table.update_item(
             Key={'eventId': event_id},
-            # Note l'utilisation de #l au lieu de location
             UpdateExpression="SET title = :t, #d = :d, #l = :l, description = :desc, updatedAt = :u",
             ExpressionAttributeNames={
-                '#d': 'date',     # 'date' est un mot réservé
-                '#l': 'location'  # 'location' est AUSSI un mot réservé
+                '#d': 'date',
+                '#l': 'location'
             },
             ExpressionAttributeValues={
                 ':t': body['title'],
