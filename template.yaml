@@ -72,7 +72,7 @@ Resources:
             Path: /events
             Method: POST
       Policies:
-        - DynamoDBWritePolicy:
+        - DynamoDBCrudPolicy:
             TableName: !Ref EventsTable
 
   CreateEventLogGroup:
@@ -93,3 +93,112 @@ Resources:
             ApiId: !Ref HttpApi
             Path: /events
             Method: GET
+      Policies:
+        # CRUD est OBLIGATOIRE ici car ReadPolicy interdit le "Scan"
+        - DynamoDBCrudPolicy:
+            TableName: !Ref EventsTable
+
+  GetEventsLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${GetEventsFunction}"
+      RetentionInDays: 7
+
+  GetEventByIdFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/get_event_by_id/
+      Handler: app.handler
+      Events:
+        GetEventById:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /events/{id}
+            Method: GET
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref EventsTable
+
+  GetEventByIdLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${GetEventByIdFunction}"
+      RetentionInDays: 7
+
+  UpdateEventFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/update_event/
+      Handler: app.handler
+      Events:
+        UpdateEvent:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /events/{id}
+            Method: PUT
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref EventsTable
+
+  UpdateEventLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${UpdateEventFunction}"
+      RetentionInDays: 7
+
+  DeleteEventFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/delete_event/
+      Handler: app.handler
+      Events:
+        DeleteEvent:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /events/{id}
+            Method: DELETE
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref EventsTable
+
+  DeleteEventLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${DeleteEventFunction}"
+      RetentionInDays: 7
+
+  GetUploadUrlFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/get_upload_url/
+      Handler: app.handler
+      Events:
+        GetUploadUrl:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /events/{id}/upload-url
+            Method: POST
+      Policies:
+        # On met CRUD aussi pour S3 pour éviter tout blocage sur la signature
+        - S3CrudPolicy:
+            BucketName: !Ref ImagesBucket
+        - DynamoDBCrudPolicy:
+            TableName: !Ref EventsTable
+
+  GetUploadUrlLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${GetUploadUrlFunction}"
+      RetentionInDays: 7
+
+Outputs:
+  ApiUrl:
+    Description: HTTP API endpoint
+    Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com"
+  ImagesBucketName:
+    Description: S3 Bucket Name
+    Value: !Ref ImagesBucket
