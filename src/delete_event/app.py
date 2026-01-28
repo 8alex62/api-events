@@ -17,9 +17,6 @@ def handler(event, context):
         return {"statusCode": 400, "body": json.dumps({"error": "Missing event ID"})}
 
     try:
-        # Suppression de l'item
-        # Note: DynamoDB delete_item ne renvoie pas d'erreur si l'item n'existe pas déjà,
-        # ce qui est standard pour un DELETE idempotent.
         table.delete_item(Key={'eventId': event_id})
         
         logger.info(f"Event deleted: {event_id}")
