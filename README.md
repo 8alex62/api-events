@@ -113,3 +113,7 @@ sam delete
 
 ### 5. Exemple de logs via CloudWatch
 <img width="1686" height="681" alt="image" src="https://github.com/user-attachments/assets/f4af7b61-10d2-46d9-8c15-44a0d48ee4c1" />
+
+### Budget
+<img width="1642" height="900" alt="image" src="https://github.com/user-attachments/assets/26f4fa69-3927-4f88-b5c7-79160d4db09c" />
+
