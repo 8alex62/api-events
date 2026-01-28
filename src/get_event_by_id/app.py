@@ -19,13 +19,11 @@ class DecimalEncoder(json.JSONEncoder):
 
 def handler(event, context):
     try:
-        # Récupération du path parameter {id}
         event_id = event.get('pathParameters', {}).get('id')
         
         if not event_id:
              return {"statusCode": 400, "body": json.dumps({"error": "Missing event ID"})}
 
-        # Appel DynamoDB GetItem
         response = table.get_item(Key={'eventId': event_id})
         
         if 'Item' not in response:
