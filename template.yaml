@@ -94,7 +94,6 @@ Resources:
             Path: /events
             Method: GET
       Policies:
-        # CRUD est OBLIGATOIRE ici car ReadPolicy interdit le "Scan"
         - DynamoDBCrudPolicy:
             TableName: !Ref EventsTable
 
@@ -183,7 +182,6 @@ Resources:
             Path: /events/{id}/upload-url
             Method: POST
       Policies:
-        # On met CRUD aussi pour S3 pour éviter tout blocage sur la signature
         - S3CrudPolicy:
             BucketName: !Ref ImagesBucket
         - DynamoDBCrudPolicy:
