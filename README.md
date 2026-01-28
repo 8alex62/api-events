@@ -30,18 +30,18 @@ sam deploy --guided
 ### 2. Utiliser l'API
 
 #### Obtenir tous les évènements :
-https://6u6er7turb.execute-api.eu-north-1.amazonaws.com/events
+[https://6u6er7turb.execute-api.eu-north-1.amazonaws.com/events](https://hpgp4jvrm4.execute-api.eu-north-1.amazonaws.com/events)
 
-<img width="748" height="645" alt="Capture d&#39;écran 2026-01-27 154900" src="https://github.com/user-attachments/assets/3e472d25-fc63-4a7c-8617-e7cbf5f15e4c" />
+<img width="1127" height="1038" alt="image" src="https://github.com/user-attachments/assets/e752ad2f-b2fc-459a-92f4-f9b2c3126f73" />
 
 #### Obtenir un évènement
-https://6u6er7turb.execute-api.eu-north-1.amazonaws.com/events/726acb77-1a49-4cb7-ac3e-c44012740055
+[https://6u6er7turb.execute-api.eu-north-1.amazonaws.com/events/{id}](https://hpgp4jvrm4.execute-api.eu-north-1.amazonaws.com/events/{id})
 
-<img width="817" height="495" alt="Capture d&#39;écran 2026-01-27 154924" src="https://github.com/user-attachments/assets/a9b84e79-7780-4e11-aac0-d9fba0f05562" />
+<img width="1093" height="454" alt="image" src="https://github.com/user-attachments/assets/8aa6a52c-b99b-4aa6-80ce-16e6e0e2a25d" />
 
 #### Creer un évènement
-https://6u6er7turb.execute-api.eu-north-1.amazonaws.com/events
-
+[https://6u6er7turb.execute-api.eu-north-1.amazonaws.com/events
+](https://hpgp4jvrm4.execute-api.eu-north-1.amazonaws.com/events)
 Exemple de corp de requête :
 ```json
 {
@@ -51,13 +51,50 @@ Exemple de corp de requête :
   "location": "Campus Numérique"
 }
 ```
+<img width="1101" height="575" alt="image" src="https://github.com/user-attachments/assets/18b1c029-d044-4727-b80c-0974bb205d18" />
 
-<img width="599" height="524" alt="Capture d&#39;écran 2026-01-27 154918" src="https://github.com/user-attachments/assets/456623a2-25bd-480e-9516-1c1f35cb6a46" />
+#### Uploader une URL d'imag
 
-#### Uploader une URL d'image
-https://6u6er7turb.execute-api.eu-north-1.amazonaws.com/events/726acb77-1a49-4cb7-ac3e-c44012740055/upload-url
+Part 1 : Récupération du lien temporaire 
 
-<img width="1461" height="514" alt="Capture d&#39;écran 2026-01-27 154931" src="https://github.com/user-attachments/assets/66149a54-4d01-44d7-88fe-7fd7a890b278" />
+[https://6u6er7turb.execute-api.eu-north-1.amazonaws.com/events/{id}/upload-url
+](https://hpgp4jvrm4.execute-api.eu-north-1.amazonaws.com/events/{id}/upload-url)
+
+<img width="1103" height="594" alt="image" src="https://github.com/user-attachments/assets/79f0e7db-0e5a-46b8-bd21-9bd2d6fb7a13" />
+
+
+Part 2 : Envoi de l'image via l'url récupéré
+
+
+<img width="1063" height="311" alt="image" src="https://github.com/user-attachments/assets/85e9455f-bbfb-4f80-b3ae-0c02438d3a20" />
+
+<img width="1067" height="235" alt="image" src="https://github.com/user-attachments/assets/31c40ed0-fd1b-4f86-a801-59abda5390f7" />
+
+
+
+#### Modifier un évènement
+
+https://hpgp4jvrm4.execute-api.eu-north-1.amazonaws.com/events/{id}
+
+Exemple de corp de requête :
+```json
+{
+  "title": "Titre Modifié via Postman",
+  "date": "2026-12-25T20:00:00Z",
+  "location": "Salle des fêtes",
+  "description": "Mise à jour réussie !"
+}
+```
+
+<img width="1072" height="637" alt="image" src="https://github.com/user-attachments/assets/0113774a-1e51-475e-8721-928b2963c518" />
+
+
+### Supprimer un évènement
+
+https://hpgp4jvrm4.execute-api.eu-north-1.amazonaws.com/events/{id}
+
+<img width="1093" height="483" alt="image" src="https://github.com/user-attachments/assets/68014a38-928b-433b-bd3e-b9ca84e88115" />
+
 
 ### 3. Lancer les tests
 ```bash
