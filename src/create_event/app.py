@@ -27,7 +27,7 @@ def handler(event, context):
         item = {
             'eventId': str(uuid.uuid4()),
             'title': body['title'],
-            'date': body['date'], # Format ISO 8601 attendu
+            'date': body['date'],
             'location': body.get('location', ''),
             'description': body.get('description', ''),
             'createdAt': datetime.utcnow().isoformat(),
