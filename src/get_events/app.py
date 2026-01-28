@@ -11,7 +11,6 @@ dynamodb = boto3.resource('dynamodb')
 table_name = os.environ.get('TABLE_NAME')
 table = dynamodb.Table(table_name)
 
-# Helper pour convertir les Decimal de DynamoDB en float/int pour le JSON
 class DecimalEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Decimal):
@@ -20,7 +19,6 @@ class DecimalEncoder(json.JSONEncoder):
 
 def handler(event, context):
     try:
-        # Scan de la table (OK pour un TP, attention aux perfs sur grosse DB)
         response = table.scan()
         items = response.get('Items', [])
         
