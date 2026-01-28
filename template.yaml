@@ -72,8 +72,11 @@ Resources:
             Path: /events
             Method: POST
       Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref EventsTable
+        - Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:PutItem
+              Resource: !GetAtt EventsTable.Arn
 
   CreateEventLogGroup:
     Type: AWS::Logs::LogGroup
@@ -94,8 +97,11 @@ Resources:
             Path: /events
             Method: GET
       Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref EventsTable
+        - Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:Scan
+              Resource: !GetAtt EventsTable.Arn
 
   GetEventsLogGroup:
     Type: AWS::Logs::LogGroup
@@ -116,8 +122,11 @@ Resources:
             Path: /events/{id}
             Method: GET
       Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref EventsTable
+        - Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:GetItem
+              Resource: !GetAtt EventsTable.Arn
 
   GetEventByIdLogGroup:
     Type: AWS::Logs::LogGroup
@@ -138,8 +147,11 @@ Resources:
             Path: /events/{id}
             Method: PUT
       Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref EventsTable
+        - Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:UpdateItem
+              Resource: !GetAtt EventsTable.Arn
 
   UpdateEventLogGroup:
     Type: AWS::Logs::LogGroup
@@ -160,8 +172,11 @@ Resources:
             Path: /events/{id}
             Method: DELETE
       Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref EventsTable
+        - Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:DeleteItem
+              Resource: !GetAtt EventsTable.Arn
 
   DeleteEventLogGroup:
     Type: AWS::Logs::LogGroup
@@ -182,10 +197,16 @@ Resources:
             Path: /events/{id}/upload-url
             Method: POST
       Policies:
-        - S3CrudPolicy:
-            BucketName: !Ref ImagesBucket
-        - DynamoDBCrudPolicy:
-            TableName: !Ref EventsTable
+        - Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:GetItem
+              Resource: !GetAtt EventsTable.Arn
+        - Statement:
+            - Effect: Allow
+              Action:
+                - s3:PutObject
+              Resource: !Sub "${ImagesBucket.Arn}/*"
 
   GetUploadUrlLogGroup:
     Type: AWS::Logs::LogGroup
