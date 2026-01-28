@@ -4,11 +4,9 @@ import boto3
 import pytest
 from moto import mock_dynamodb
 
-# Setup des variables d'env AVANT l'import des handlers
 os.environ['TABLE_NAME'] = 'Events-Test'
 os.environ['AWS_DEFAULT_REGION'] = 'us-east-1'
 
-# Import des handlers (assure-toi que le nom des dossiers dans src/ correspond)
 from src.create_event import app as create_app
 from src.get_events import app as list_app
 from src.get_event_by_id import app as get_one_app
