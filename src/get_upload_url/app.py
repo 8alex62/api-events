@@ -7,16 +7,13 @@ from botocore.config import Config
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-# --- CORRECTIF : ON FORCE L'ENDPOINT ---
-# On définit explicitement l'URL du serveur S3 de Stockholm (eu-north-1)
-# Cela oblige la Lambda a signer pour CETTE adresse précise.
 REGION = "eu-north-1"
 ENDPOINT = f"https://s3.{REGION}.amazonaws.com"
 
 s3_client = boto3.client(
     's3', 
     region_name=REGION,
-    endpoint_url=ENDPOINT,  # <--- C'est la ligne magique qui résout ton problème
+    endpoint_url=ENDPOINT,
     config=Config(signature_version='s3v4')
 )
 
@@ -28,7 +25,6 @@ def handler(event, context):
     if not event_id:
         return {"statusCode": 400, "body": json.dumps({"error": "Missing event ID"})}
 
-    # On force l'extension .jpg pour correspondre à ton test Postman
     object_key = f"events/{event_id}/image.jpg"
 
     try:
@@ -45,7 +41,7 @@ def handler(event, context):
         return {
             "statusCode": 200,
             "body": json.dumps({
-                "uploadUrl": url, # Cette URL contiendra MAINTENANT 'eu-north-1'
+                "uploadUrl": url,
                 "key": object_key
             }),
             "headers": {"Content-Type": "application/json"}
