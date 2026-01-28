@@ -3,7 +3,7 @@
 API REST Serverless de gestion d'événements, développée en **Python 3.9** sur AWS.
 Ce projet a été conçu avec une approche **"FinOps First"** pour respecter strictement le Free Tier AWS et les bonnes pratiques de sécurité.
 
-## 📋 Architecture & Choix Techniques
+## Architecture & Choix Techniques
 
 * **Compute** : AWS Lambda (Python 3.9 sur architecture ARM64/Graviton2 pour performance/coût).
 * **API** : API Gateway (HTTP API).
@@ -11,7 +11,7 @@ Ce projet a été conçu avec une approche **"FinOps First"** pour respecter str
 * [cite_start]**Stockage** : S3 avec chiffrement **SSE-S3** (AES256) et **Block Public Access** activé[cite: 55, 57].
 * **IaC** : Template AWS SAM (`template.yaml`).
 
-## 🚀 Runbook : Installation & Déploiement
+## Runbook : Installation & Déploiement
 
 ### Prérequis
 * AWS CLI configuré (`aws configure`)
