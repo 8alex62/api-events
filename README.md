@@ -117,3 +117,9 @@ sam delete
 ### Budget
 <img width="1642" height="900" alt="image" src="https://github.com/user-attachments/assets/26f4fa69-3927-4f88-b5c7-79160d4db09c" />
 
+### Policies 
+
+Plus d'informations concernant les autorisations attribué aux fonction lambda & au bucket S3 sont disponible dans le fichier template.yaml dans la partie Policies de chaque fonction
+
+<img width="1294" height="252" alt="image" src="https://github.com/user-attachments/assets/71f7c230-3745-4ddd-ab52-f4d7b3651008" />
+
